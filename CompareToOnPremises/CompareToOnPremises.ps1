@@ -1,16 +1,23 @@
-﻿$cloudmailboxes = Import-CSV .\migration.csv
+﻿$reportfound = @()
+$reportnotfound = @()
+
+$cloudmailboxes = Import-CSV .\migration.csv
 
 foreach ($cloudmailbox in $cloudmailboxes)
 {
     try {
-        Get-Mailbox $cloudmailbox -ErrorAction STOP
-        $mailboxstatus = "Found"
+        Get-Mailbox $cloudmailbox.PrimarySMTPAddress -ErrorAction STOP
+        $reportfound += "$($cloudmailbox.PrimarySMTPAddress) was found"
 
     }
     catch
     {
-        $mailboxstatus = "Not found"
+        $reportnotfound += "$($cloudmailbox.PrimarySMTPAddress) was not found"
     }
 
-    Write-Host "$cloudmailbox was $mailboxstatus"
+    
 }
+
+$reportfound | Out-File found.txt
+
+$reportnotfound | Out-File notfound.txt
