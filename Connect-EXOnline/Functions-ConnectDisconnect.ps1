@@ -25,7 +25,6 @@ check out Exchange Server Pro.
 Change Log:
 V1.00, 14/10/2014 - Initial version
 #>
-http://exchangeserverpro.com/powershell-function-connect-office-365/
 
 # This function will prompt for authentication and connect to Exchange Online 
 Function Connect-EXOnline {
