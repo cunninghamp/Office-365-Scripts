@@ -13,7 +13,7 @@ param ()
 # Variables
 #...................................
 
-$scriptname = $MyInvocation.MyCommand.Name
+$scriptname = "CompareOnPremisesToCloud.ps1"
 $now = Get-Date
 
 $myDir = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -34,9 +34,6 @@ $logstring1 = " $scriptname"
 #...................................
 
 $initstring0 = "Initializing..."
-$initstring1 = "Loading the Exchange Server PowerShell snapin"
-$initstring2 = "The Exchange Server PowerShell snapin did not load."
-$initstring3 = "Setting scope to entire forest"
 
 
 #...................................
@@ -49,7 +46,7 @@ Function Connect-EXOnline {
 
     $URL = "https://ps.outlook.com/powershell"
     
-    $Credentials = Get-Credential -Message "Enter your Office 365 admin credentials"
+    $Credentials = Get-Credential
 
     $EXOSession = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri $URL -Credential $Credentials -Authentication Basic -AllowRedirection -Name "Exchange Online"
 
@@ -70,22 +67,33 @@ Function Disconnect-EXOnline {
 # Initialize
 #...................................
 
-Import-Module ActiveDirectory
+try {
+    Import-Module ActiveDirectory -ErrorAction STOP
+}
+catch {
+    Write-Warning $_.Exception.Message
+    EXIT
+}
+
 
 #...................................
 # Script
 #...................................
 
+Write-Host "Connecting to Exchange Online..."
 
 Connect-EXOnline
 
+Write-Host "Retrieving mailbox list from Exchange Online"
 $cloudmailboxes = Get-EXOMailbox
 
+Write-Host "Retrieving user accounts list from Active Directory"
 $onpremusers = Get-ADUser -Filter * -Properties *
 
 foreach ($onpremuser in $onpremusers)
 {
 
+    Write-Host "Processing: $onpremusers.Name"
     $reportObj = New-Object PSObject
     $reportObj | Add-Member NoteProperty -Name "Name" -Value $onpremuser.Name
     $reportObj | Add-Member NoteProperty -Name "SamAccountName" -Value $onpremuser.SamAccountName
@@ -112,17 +120,15 @@ foreach ($onpremuser in $onpremusers)
 
 }
 
-
-
-
-
+Write-Host "Disconnecting from Exchange Online"
 Disconnect-EXOnline
 
+Write-Host "Writing report to CSV file"
 $report | Export-CSV -NoTypeInformation report.csv
 
 #...................................
 # End
 #...................................
 
-
+Write-Host "Finished."
 
