@@ -93,7 +93,7 @@ $onpremusers = Get-ADUser -Filter * -Properties *
 foreach ($onpremuser in $onpremusers)
 {
 
-    Write-Host "Processing: $onpremusers.Name"
+    Write-Host "Processing: $onpremuser.Name"
     $reportObj = New-Object PSObject
     $reportObj | Add-Member NoteProperty -Name "Name" -Value $onpremuser.Name
     $reportObj | Add-Member NoteProperty -Name "SamAccountName" -Value $onpremuser.SamAccountName
