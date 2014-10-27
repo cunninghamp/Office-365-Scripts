@@ -103,7 +103,7 @@ foreach ($onpremuser in $onpremusers)
 
     $cloudmailbox = $null
 
-    $cloudmailbox = $cloudmailboxes | Where {$_.Name -eq $onpremuser.Name}
+    $cloudmailbox = $cloudmailboxes | Where {$_.Name -eq $onpremuser.UserPrincipalName}
 
     if ($cloudmailbox)
     {
