@@ -85,7 +85,7 @@ Write-Host "Connecting to Exchange Online..."
 Connect-EXOnline
 
 Write-Host "Retrieving mailbox list from Exchange Online"
-$cloudmailboxes = Get-EXOMailbox
+$cloudusers = Get-EXOUser
 
 Write-Host "Retrieving user accounts list from Active Directory"
 $onpremusers = Get-ADUser -Filter * -Properties *
@@ -101,18 +101,20 @@ foreach ($onpremuser in $onpremusers)
     $reportObj | Add-Member NoteProperty -Name "Email Address" -Value $onpremuser.EmailAddress
     $reportObj | Add-Member NoteProperty -Name "Target Address" -Value $onpremuser.targetAddress
 
-    $cloudmailbox = $null
+    $clouduser = $null
 
-    $cloudmailbox = $cloudmailboxes | Where {$_.Name -eq $onpremuser.UserPrincipalName}
+    $clouduser = $cloudusers | Where {$_.UserPrincipalName -eq $onpremuser.UserPrincipalName}
 
-    if ($cloudmailbox)
+    if ($clouduser)
     {
-        $reportObj | Add-Member NoteProperty -Name "Cloud Name" -Value $cloudmailbox.Name
-        $reportObj | Add-Member NoteProperty -Name "Cloud Email Address" -Value $cloudmailbox.PrimarySMTPAddress
+        $reportObj | Add-Member NoteProperty -Name "Cloud Name" -Value $clouduser.Name
+        $reportObj | Add-Member NoteProperty -Name "Cloud UPN" -Value $clouduser.UserPrincipalName
+        $reportObj | Add-Member NoteProperty -Name "Cloud Email Address" -Value $clouduser.WindowsEmailAddress
     }
     else
     {
         $reportObj | Add-Member NoteProperty -Name "Cloud Name" -Value "Not matched"
+        $reportObj | Add-Member NoteProperty -Name "Cloud UPN" -Value "Not matched"
         $reportObj | Add-Member NoteProperty -Name "Cloud Email Address" -Value "Not matched"
     }
 
