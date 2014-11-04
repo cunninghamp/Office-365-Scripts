@@ -6,7 +6,12 @@ CompareCloudToOnPremises.ps1
 #requires -version 2
 
 [CmdletBinding()]
-param ()
+param (
+
+	[Parameter( Mandatory=$false)]
+	[string]$ADWSserver
+
+)
 
 
 #...................................
@@ -88,16 +93,24 @@ Write-Host "Retrieving mailbox list from Exchange Online"
 $cloudusers = Get-EXOUser
 
 Write-Host "Retrieving user accounts list from Active Directory"
-$onpremusers = Get-ADUser -Filter * -Properties *
+
+if ($ADWSserver)
+{
+    $onpremusers = Get-ADUser -Filter * -Properties * -Server $ADWSserver
+}
+else
+{
+    $onpremusers = Get-ADUser -Filter * -Properties *
+}
 
 foreach ($clouduser in $cloudusers)
 {
 
-    Write-Host "Processing: $($clouduser).Name"
+    Write-Host "Processing: $clouduser"
     $reportObj = New-Object PSObject
     $reportObj | Add-Member NoteProperty -Name "Name" -Value $clouduser.Name
     $reportObj | Add-Member NoteProperty -Name "UPN" -Value $clouduser.UserPrincipalName
-    $reportObj | Add-Member NoteProperty -Name "Email Address" -Value $onpremuser.WindowsEmailAddress
+    $reportObj | Add-Member NoteProperty -Name "Email Address" -Value $clouduser.WindowsEmailAddress
 
 
     $onpremuser = $null

@@ -6,7 +6,12 @@ CompareOnPremisesToCloud.ps1
 #requires -version 2
 
 [CmdletBinding()]
-param ()
+param (
+
+	[Parameter( Mandatory=$false)]
+	[string]$ADWSserver
+
+)
 
 
 #...................................
@@ -88,12 +93,19 @@ Write-Host "Retrieving mailbox list from Exchange Online"
 $cloudusers = Get-EXOUser
 
 Write-Host "Retrieving user accounts list from Active Directory"
-$onpremusers = Get-ADUser -Filter * -Properties *
+if ($ADWSserver)
+{
+    $onpremusers = Get-ADUser -Filter * -Properties * -Server $ADWSserver
+}
+else
+{
+    $onpremusers = Get-ADUser -Filter * -Properties *
+}
 
 foreach ($onpremuser in $onpremusers)
 {
 
-    Write-Host "Processing: $onpremuser.Name"
+    Write-Host "Processing: $onpremuser"
     $reportObj = New-Object PSObject
     $reportObj | Add-Member NoteProperty -Name "Name" -Value $onpremuser.Name
     $reportObj | Add-Member NoteProperty -Name "SamAccountName" -Value $onpremuser.SamAccountName
@@ -126,7 +138,7 @@ Write-Host "Disconnecting from Exchange Online"
 Disconnect-EXOnline
 
 Write-Host "Writing report to CSV file"
-$report | Export-CSV -NoTypeInformation report.csv
+$report | Export-CSV -NoTypeInformation CompareOnPremisestoCloud-Report.csv
 
 #...................................
 # End
