@@ -30,19 +30,19 @@
 [CmdletBinding()]
 Param(
     [Parameter(Mandatory=$True,Position=1)]
-    [string]$UserPrincipalName
+    [string]$UserName
 )
 
 try
 {
     Import-Module ActiveDirectory -ErrorAction STOP
-    $user = Get-ADUser $UserPrincipalName -ErrorAction STOP
+    $user = Get-ADUser $UserName -ErrorAction STOP
     $guid = [GUID]($user).ObjectGUID
     $bytearray = $guid.ToByteArray()
 
     $immutableID = [system.convert]::ToBase64String($bytearray)
 
-    Write-Host "User: $userPrincipalName"
+    Write-Host "User: $UserName"
     Write-Host "ImmutableID: $immutableID"
 
 }
