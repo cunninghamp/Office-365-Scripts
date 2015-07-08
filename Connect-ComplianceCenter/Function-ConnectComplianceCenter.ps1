@@ -19,7 +19,7 @@ Find me on:
 For more Exchange Server tips, tricks and news
 check out Exchange Server Pro.
 
-* Website:	http://exchangeserverpro.com
+* Website:	http://exchangeserverpro.com/powershell-function-to-connect-to-the-office-365-compliance-center
 * Twitter:	http://twitter.com/exchservpro
 
 Change Log:
