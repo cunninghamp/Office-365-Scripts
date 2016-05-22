@@ -24,12 +24,13 @@ check out Exchange Server Pro.
 
 Change Log:
 V1.00, 14/10/2014 - Initial version
+V1.01, 22/05/2016 - Updated with new PowerShell endpoint URL
 #>
 
 # This function will prompt for authentication and connect to Exchange Online 
 Function Connect-EXOnline {
 
-    $URL = "https://ps.outlook.com/powershell"
+    $URL = "https://outlook.office365.com/powershell-liveid/"
     
     $Credentials = Get-Credential -Message "Enter your Office 365 admin credentials"
 
