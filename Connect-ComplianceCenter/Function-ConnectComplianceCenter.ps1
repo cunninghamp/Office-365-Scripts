@@ -6,21 +6,14 @@ For more info on how they are used see:
 http://exchangeserverpro.com/powershell-function-connect-office-365-compliance-center/
 http://exchangeserverpro.com/create-powershell-profile
 
-
 Written by: Paul Cunningham
 
 Find me on:
 
-* My Blog:	http://paulcunningham.me
+* My Blog:	https://paulcunningham.me
 * Twitter:	https://twitter.com/paulcunningham
-* LinkedIn:	http://au.linkedin.com/in/cunninghamp/
+* LinkedIn:	https://au.linkedin.com/in/cunninghamp/
 * Github:	https://github.com/cunninghamp
-
-For more Exchange Server tips, tricks and news
-check out Exchange Server Pro.
-
-* Website:	http://exchangeserverpro.com/powershell-function-to-connect-to-the-office-365-compliance-center
-* Twitter:	http://twitter.com/exchservpro
 
 Change Log:
 V1.00, 8/7/2014 - Initial version
